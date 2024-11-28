@@ -14,9 +14,10 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity extends AppCompatActivity {
 
     private TextView result;
-    private Double firstNumber = null ;
-
+    private Double firstNumber = 0.0;
+    private Double secondNumber = null;
     private char ch;
+    private final char charNull = '\u0000' ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,51 +30,62 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         result = findViewById(R.id.textViewResult);
-        result.setText("");
+        result.setText("0");
     }
 
     public void numFunction(View view) {
         Button button = (Button) view;
-        result.append(button.getText().toString());
+        if (result.getText().toString().equals("0"))
+           result.setText(button.getText().toString());
+
+       else
+           result.append(button.getText().toString());
     }
 
     public void chFunction(View view) {
-        Button button = (Button) view;
-        ch = ((Button) view).getText().toString().charAt(0);
-        if (!result.getText().toString().isEmpty()) {
-            firstNumber = Double.parseDouble(result.getText().toString());
-            result.setText("");
+
+            if (ch != charNull ) {
+                action();
+                chgetNumber(view);
+                firstNumber = Double.parseDouble(result.getText().toString());
+            } else {
+                    chgetNumber(view);
+                    firstNumber = Double.parseDouble(result.getText().toString());
+                    result.setText("0");
+
+            }
         }
-    }
+
 
     public void eqFunction(View view) {
-        if (!result.getText().toString().isEmpty() && ch !='\u0000') {
+        if ( ch != charNull) {
            action();
         }
     }
 
     public void clearFunction(View view) {
-        if (!result.getText().toString().isEmpty())
-            result.setText("");
+        cleanScreen();
+        ch = charNull;
     }
 
     public void dotFunction(View view) {
         if (result.getText().toString().contains("."))
             return ;
         else {
-            if ((!result.getText().toString().isEmpty()) && (!result.getText().toString().equals(".")))
+            if ( (!result.getText().toString().equals(".")))
                 result.append(".");
         }
     }
 
     public void action(){
-        double secondNumber;
+
         secondNumber = Double.parseDouble(result.getText().toString());
         if (ch == '+') {
             result.setText(String.valueOf(firstNumber + secondNumber));
         }
         if (ch == '-') {
-            result.setText(String.valueOf(firstNumber - secondNumber));
+            secondNumber = -secondNumber;
+            result.setText(String.valueOf(firstNumber + secondNumber));
         }
         if (ch == '*') {
             result.setText(String.valueOf(firstNumber * secondNumber));
@@ -81,6 +93,17 @@ public class MainActivity extends AppCompatActivity {
         if (ch == '/') {
             result.setText(String.valueOf(firstNumber / secondNumber));
         }
-        ch = '\u0000';
+        ch = charNull;
+        secondNumber = null;
+    }
+
+    public void chgetNumber(View view){
+        Button button = (Button) view;
+        ch = ((Button) view).getText().toString().charAt(0);
+    }
+
+    public void cleanScreen() {
+
+            result.setText("0");
     }
 }
