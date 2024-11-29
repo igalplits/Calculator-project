@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView result;
     private Double firstNumber = 0.0;
-    private Double secondNumber = null;
+    private Double secondNumber ;
     private char ch;
     private final char charNull = '\u0000' ;
 
@@ -35,7 +35,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void numFunction(View view) {
         Button button = (Button) view;
-        if (result.getText().toString().equals("0"))
+        if (ch!=charNull && firstNumber != 0) {
+            result.setText(button.getText().toString());
+
+        }
+       else if (result.getText().toString().equals("0"))
            result.setText(button.getText().toString());
 
        else
@@ -44,14 +48,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void chFunction(View view) {
 
-            if (ch != charNull ) {
+            if (ch != charNull && !result.getText().toString().contains("-")) {
                 action();
                 chgetNumber(view);
                 firstNumber = Double.parseDouble(result.getText().toString());
+
             } else {
                     chgetNumber(view);
                     firstNumber = Double.parseDouble(result.getText().toString());
-                    result.setText("0");
+                    result.setText("");
 
             }
         }
