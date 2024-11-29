@@ -15,7 +15,6 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView result;
     private Double firstNumber = 0.0;
-    private Double secondNumber ;
     private char ch;
     private final char charNull = '\u0000' ;
 
@@ -35,9 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void numFunction(View view) {
         Button button = (Button) view;
-        if (ch!=charNull && firstNumber != 0) {
+        if (ch!=charNull && firstNumber.toString().equals(result.getText().toString())) {
             result.setText(button.getText().toString());
-
         }
        else if (result.getText().toString().equals("0"))
            result.setText(button.getText().toString());
@@ -47,19 +45,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void chFunction(View view) {
-
-            if (ch != charNull && !result.getText().toString().contains("-")) {
+//
+            if (ch != charNull && !result.getText().toString().contains("-") && !result.getText().toString().isEmpty()) {
                 action();
                 chgetNumber(view);
                 firstNumber = Double.parseDouble(result.getText().toString());
-
-            } else {
+            }
+            else if (!result.getText().toString().isEmpty()) {
                     chgetNumber(view);
                     firstNumber = Double.parseDouble(result.getText().toString());
                     result.setText("");
-
             }
-        }
+
+    }
 
 
     public void eqFunction(View view) {
@@ -83,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void action(){
-
+        double secondNumber;
         secondNumber = Double.parseDouble(result.getText().toString());
         if (ch == '+') {
             result.setText(String.valueOf(firstNumber + secondNumber));
@@ -99,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             result.setText(String.valueOf(firstNumber / secondNumber));
         }
         ch = charNull;
-        secondNumber = null;
+
     }
 
     public void chgetNumber(View view){
@@ -108,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void cleanScreen() {
-
             result.setText("0");
     }
+
+
 }
