@@ -14,9 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity extends AppCompatActivity {
 
     private TextView result;
-    private Double firstNumber = 0.0;
-    private char ch;
-    private final char charNull = '\u0000' ;
+    private calculator  calculator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,84 +28,63 @@ public class MainActivity extends AppCompatActivity {
         });
         result = findViewById(R.id.textViewResult);
         result.setText("0");
+        calculator = new calculator();
     }
 
     public void numFunction(View view) {
         Button button = (Button) view;
-        if (ch!=charNull && firstNumber.toString().equals(result.getText().toString())) {
+        String currentText = result.getText().toString();
+        if(calculator.getOperator() != '\u0000' && String.valueOf(calculator.getFirstNumber()).equals(currentText))
+        {result.setText(button.getText().toString());}
+        else if (currentText.equals("0")) {
             result.setText(button.getText().toString());
+        } else {
+            result.append(button.getText().toString());
         }
-       else if (result.getText().toString().equals("0"))
-           result.setText(button.getText().toString());
-
-       else
-           result.append(button.getText().toString());
     }
+
+
 
     public void chFunction(View view) {
-//
-            if (ch != charNull && !result.getText().toString().contains("-") && !result.getText().toString().isEmpty()) {
-                action();
-                chgetNumber(view);
-                firstNumber = Double.parseDouble(result.getText().toString());
-            }
-            else if (!result.getText().toString().isEmpty()) {
-                    chgetNumber(view);
-                    firstNumber = Double.parseDouble(result.getText().toString());
-                    result.setText("");
-            }
+        String currentText = result.getText().toString();
+        if(calculator.getOperator() != '\u0000' && !currentText.contains("-") && !currentText.isEmpty())
+        {
+            double secondNumber = Double.parseDouble(currentText);
+            double resultValue = calculator.calculate(secondNumber);
+            result.setText(String.valueOf(resultValue));
+            calculator.setFirstNumber(Double.parseDouble(result.getText().toString()));
+
+        }
+        else if (!currentText.isEmpty()) {
+        calculator.setFirstNumber(Double.parseDouble(result.getText().toString()));
+        Button button = (Button) view;
+        calculator.setOperator(button.getText().toString().charAt(0));
+        result.setText("");
+        }
 
     }
+
 
 
     public void eqFunction(View view) {
-        if ( ch != charNull) {
-           action();
+        try {
+            double secondNumber = Double.parseDouble(result.getText().toString());
+            double resultValue = calculator.calculate(secondNumber);
+            result.setText(String.valueOf(resultValue));
+        } catch (ArithmeticException | IllegalStateException e) {
+            result.setText("Error");
         }
     }
 
     public void clearFunction(View view) {
-        cleanScreen();
-        ch = charNull;
+        calculator.clear();
+        result.setText("0");
     }
 
     public void dotFunction(View view) {
-        if (result.getText().toString().contains("."))
-            return ;
-        else {
-            if ( (!result.getText().toString().equals(".")))
-                result.append(".");
+        String currentText = result.getText().toString();
+        if (!currentText.contains(".")) {
+            result.append(".");
         }
     }
-
-    public void action(){
-        double secondNumber;
-        secondNumber = Double.parseDouble(result.getText().toString());
-        if (ch == '+') {
-            result.setText(String.valueOf(firstNumber + secondNumber));
-        }
-        if (ch == '-') {
-            secondNumber = -secondNumber;
-            result.setText(String.valueOf(firstNumber + secondNumber));
-        }
-        if (ch == '*') {
-            result.setText(String.valueOf(firstNumber * secondNumber));
-        }
-        if (ch == '/') {
-            result.setText(String.valueOf(firstNumber / secondNumber));
-        }
-        ch = charNull;
-
-    }
-
-    public void chgetNumber(View view){
-        Button button = (Button) view;
-        ch = ((Button) view).getText().toString().charAt(0);
-    }
-
-    public void cleanScreen() {
-            result.setText("0");
-    }
-
-
 }
